@@ -1,0 +1,31 @@
+﻿Build started 18/12/2018 9:30:11 CH.
+     1>Project "D:\D\github\hoc_kernel\code\FsFilter\FsFilter\FsFilter.vcxproj" on node 2 (Build target(s)).
+     1>StampInf:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\stampinf.exe -d "*" -a "amd64" -v "*" -k "1.11" -u "1.11.0" -f x64\Win7Release\FsFilter.inf 
+         Stamping x64\Win7Release\FsFilter.inf [Version] section with DriverVer=12/18/2018,21.30.11.786
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Ix64\Win7Release\ /Zi /nologo /W4 /WX /Ox /Os /Oy- /D _WIN64 /D _AMD64_ /D AMD64 /D _WIN32_WINNT=0x0601 /D WINVER=0x0601 /D WINNT=1 /D NTDDI_VERSION=0x06010000 /D _UNICODE /D UNICODE /GF /Gm- /Zp8 /GS /Gy /fp:precise /Zc:wchar_t- /Zc:forScope- /GR- /Fo"x64\Win7Release\\" /Fd"x64\Win7Release\vc120.pdb" /Gz /wd4603 /wd4627 /wd4986 /wd4987 /wd4996 /FI"C:\Program Files (x86)\Windows Kits\8.1\Include\Shared\warning.h" /errorReport:prompt /kernel -cbstring -d2epilogunwind  /d1nodatetime /d1import_no_registry /d2AllowCompatibleILVersions /d2Zi+ FsFilter.c
+         FsFilter.c
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(282): error C2220: warning treated as error - no 'object' file generated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(282): warning C4995: 'scanf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(300): warning C4995: 'sscanf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(306): warning C4995: '_snscanf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(339): warning C4995: '_snprintf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(339): warning C4995: '_vsnprintf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(347): warning C4995: 'sprintf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(347): warning C4995: 'vsprintf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(453): warning C4995: 'swprintf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(454): warning C4995: 'vswprintf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(465): warning C4995: '_snwprintf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(465): warning C4995: '_vsnwprintf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(545): warning C4995: 'swscanf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(551): warning C4995: '_snwscanf': name was marked as #pragma deprecated
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(555): warning C4995: 'wscanf': name was marked as #pragma deprecated
+     1>FsFilter.c(144): warning C4100: 'Data' : unreferenced formal parameter
+     1>FsFilter.c(188): warning C4100: 'CompletionContext' : unreferenced formal parameter
+     1>FsFilter.c(186): warning C4100: 'Data' : unreferenced formal parameter
+     1>Done Building Project "D:\D\github\hoc_kernel\code\FsFilter\FsFilter\FsFilter.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.24

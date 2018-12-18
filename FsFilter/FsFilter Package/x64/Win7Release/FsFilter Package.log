@@ -1,0 +1,8 @@
+﻿Build started 18/12/2018 9:30:12 CH.
+     1>Project "D:\D\github\hoc_kernel\code\FsFilter\FsFilter Package\FsFilter Package.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files (x86)\Windows Kits\8.1\build\WindowsDriver.common.targets(1366,5): error MSB3030: Could not copy the file "D:\D\github\hoc_kernel\code\FsFilter\x64\Win7Release\FsFilter.sys" because it was not found.
+     1>Done Building Project "D:\D\github\hoc_kernel\code\FsFilter\FsFilter Package\FsFilter Package.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.04
