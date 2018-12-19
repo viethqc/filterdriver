@@ -1,8 +1,8 @@
-﻿Build started 19/12/2018 12:24:45 SA.
-     1>Project "D:\D\github\hoc_kernel\code\FsFilter\FsFilter\FsFilter.vcxproj" on node 2 (Build target(s)).
+﻿Build started 20/12/2018 12:54:54 SA.
+     1>Project "D:\D\github\filterdriver\FsFilter\FsFilter\FsFilter.vcxproj" on node 2 (Build target(s)).
      1>StampInf:
          C:\Program Files (x86)\Windows Kits\8.1\bin\x86\stampinf.exe -d "*" -a "x86" -v "*" -k "1.11" -u "1.11.0" -f Win7Release\FsFilter.inf 
-         Stamping Win7Release\FsFilter.inf [Version] section with DriverVer=12/19/2018,0.24.46.82
+         Stamping Win7Release\FsFilter.inf [Version] section with DriverVer=12/20/2018,0.54.54.724
        ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IWin7Release\ /Zi /nologo /W3 /WX- /Ox /Os /Oy- /D _X86_=1 /D i386=1 /D STD_CALL /D _WIN32_WINNT=0x0601 /D WINVER=0x0601 /D WINNT=1 /D NTDDI_VERSION=0x06010000 /GF /Gm- /Zp8 /GS /Gy /fp:precise /Zc:wchar_t- /Zc:forScope- /GR- /Fo"Win7Release\\" /Fd"Win7Release\vc120.pdb" /Gz /wd4603 /wd4627 /wd4986 /wd4987 /wd4996 /FI"C:\Program Files (x86)\Windows Kits\8.1\Include\Shared\warning.h" /analyze- /errorReport:prompt /kernel -cbstring  /d1nodatetime /d1import_no_registry /d2AllowCompatibleILVersions /d2Zi+ FsFilter.c
          FsFilter.c
@@ -20,13 +20,13 @@
      1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(545): warning C4995: 'swscanf': name was marked as #pragma deprecated
      1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(551): warning C4995: '_snwscanf': name was marked as #pragma deprecated
      1>C:\Program Files (x86)\Windows Kits\8.1\Include\km\crt\stdio.h(555): warning C4995: 'wscanf': name was marked as #pragma deprecated
-     1>FsFilter.c(235): warning C4133: 'function' : incompatible types - from 'unsigned short [30]' to 'PCSTR'
+     1>FsFilter.c(255): warning C4133: 'function' : incompatible types - from 'unsigned short [30]' to 'PCSTR'
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\D\github\hoc_kernel\code\FsFilter\Win7Release\FsFilter.sys" /VERSION:"6.3" /INCREMENTAL:NO /NOLOGO /WX /SECTION:"INIT,d" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\fltmgr.lib" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\memcmp.lib" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\BufferOverflowK.lib" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\ntoskrnl.lib" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\hal.lib" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\wmilib.lib" /NODEFAULTLIB /MANIFEST:NO /DEBUG /PDB:"D:\D\github\hoc_kernel\code\FsFilter\Win7Release\FsFilter.pdb" /SUBSYSTEM:NATIVE,"6.01" /Driver /OPT:REF /OPT:ICF /ENTRY:"GsDriverEntry@8" /RELEASE /IMPLIB:"D:\D\github\hoc_kernel\code\FsFilter\Win7Release\FsFilter.lib" /MERGE:"_TEXT=.text;_PAGE=PAGE" /MACHINE:X86 /PROFILE /SAFESEH /kernel /IGNORE:4198,4010,4037,4039,4065,4070,4078,4087,4089,4221 /osversion:6.3 /pdbcompress /debugtype:pdata Win7Release\FsFilter.res
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\D\github\filterdriver\FsFilter\Win7Release\FsFilter.sys" /VERSION:"6.3" /INCREMENTAL:NO /NOLOGO /WX /SECTION:"INIT,d" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\fltmgr.lib" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\memcmp.lib" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\BufferOverflowK.lib" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\ntoskrnl.lib" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\hal.lib" "C:\Program Files (x86)\Windows Kits\8.1\lib\win7\KM\x86\wmilib.lib" /NODEFAULTLIB /MANIFEST:NO /DEBUG /PDB:"D:\D\github\filterdriver\FsFilter\Win7Release\FsFilter.pdb" /SUBSYSTEM:NATIVE,"6.01" /Driver /OPT:REF /OPT:ICF /ENTRY:"GsDriverEntry@8" /RELEASE /IMPLIB:"D:\D\github\filterdriver\FsFilter\Win7Release\FsFilter.lib" /MERGE:"_TEXT=.text;_PAGE=PAGE" /MACHINE:X86 /PROFILE /SAFESEH /kernel /IGNORE:4198,4010,4037,4039,4065,4070,4078,4087,4089,4221 /osversion:6.3 /pdbcompress /debugtype:pdata Win7Release\FsFilter.res
          Win7Release\FsFilter.obj
-         FsFilter.vcxproj -> D:\D\github\hoc_kernel\code\FsFilter\Win7Release\FsFilter.sys
-     1>Done Building Project "D:\D\github\hoc_kernel\code\FsFilter\FsFilter\FsFilter.vcxproj" (Build target(s)).
+         FsFilter.vcxproj -> D:\D\github\filterdriver\FsFilter\Win7Release\FsFilter.sys
+     1>Done Building Project "D:\D\github\filterdriver\FsFilter\FsFilter\FsFilter.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.97
+Time Elapsed 00:00:00.74

@@ -160,16 +160,36 @@ FsFilterPreCreateOperation (
     UNREFERENCED_PARAMETER( FltObjects );
     UNREFERENCED_PARAMETER( CompletionContext );
 
+	PFLT_FILE_NAME_INFORMATION FileNameInfo;
+	NTSTATUS status;
 	WCHAR szFileName[512 + 1] = { 0 };
 
-	RtlStringCchCopyNW(szFileName, 512, FltObjects->FileObject->FileName.Buffer, FltObjects->FileObject->FileName.Length);
-
-	DbgPrint("FsFilterPreCreateOperation: %s\n", szFileName);
-	if (wcsstr(szFileName, L"test.txt") != NULL)
+	status = FltGetFileNameInformation(Data, FLT_FILE_NAME_NORMALIZED | FLT_FILE_NAME_QUERY_DEFAULT, &FileNameInfo);
+	if (NT_SUCCESS(status))
 	{
-		DbgPrint("File not create\n");
-		return FLT_PREOP_DISALLOW_FASTIO;
+		status = FltParseFileNameInformation(FileNameInfo);
+
+		if (NT_SUCCESS(status))
+		{
+			if (FileNameInfo->Name.MaximumLength < 260)
+			{
+				RtlCopyMemory(szFileName, FileNameInfo->Name.Buffer, FileNameInfo->Name.MaximumLength);
+				_wcsupr(szFileName);
+
+				if (wcsstr(szFileName, L"A.TXT") != NULL)
+				{
+					DbgPrint("FsFilterPreCreateOperation: %wS\n", szFileName);
+					Data->IoStatus.Status = STATUS_INVALID_HANDLE;
+					Data->IoStatus.Information = 0;
+					FltReleaseFileNameInformation(FileNameInfo);
+					return FLT_PREOP_COMPLETE;
+				}
+			}
+		}
+
+		FltReleaseFileNameInformation(FileNameInfo);
 	}
+	
 	
     return FLT_PREOP_SUCCESS_WITH_CALLBACK;
 }
