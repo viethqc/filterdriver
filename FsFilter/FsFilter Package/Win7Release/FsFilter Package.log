@@ -1,4 +1,4 @@
-﻿Build started 20/12/2018 12:54:55 SA.
+﻿Build started 21/12/2018 1:10:37 SA.
      1>Project "D:\D\github\filterdriver\FsFilter\FsFilter Package\FsFilter Package.vcxproj" on node 2 (Build target(s)).
      1>Inf2Cat:
          C:\Program Files (x86)\Windows Kits\8.1\bin\x86\inf2cat.exe /os:7_x86 /driver:"D:\D\github\filterdriver\FsFilter\Win7Release\FsFilter Package\\" 
@@ -6,7 +6,7 @@
          Signability test failed.
          
          Errors:
-         22.9.7: DriverVer set to incorrect date (postdated DriverVer not allowed) in \fsfilter.inf.  The current date (UTC) is 12/19/2018.
+         22.9.7: DriverVer set to incorrect date (postdated DriverVer not allowed) in \fsfilter.inf.  The current date (UTC) is 12/20/2018.
          Try using /USELOCALTIME when DriverVer is postdated
          
          Warnings:
@@ -16,4 +16,4 @@
 
 Build FAILED.
 
-Time Elapsed 00:00:00.23
+Time Elapsed 00:00:00.48

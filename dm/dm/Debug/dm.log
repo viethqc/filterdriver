@@ -1,0 +1,15 @@
+﻿Build started 20/12/2018 11:05:17 CH.
+     1>Project "D:\github\Hook\Ma nguon chuong trinh\dm\dm\dm.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\dm.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt dm.cpp
+         dm.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\github\Hook\Ma nguon chuong trinh\dm\Debug\dm.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"D:\github\Hook\Ma nguon chuong trinh\dm\Debug\dm.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\github\Hook\Ma nguon chuong trinh\dm\Debug\dm.lib" /MACHINE:X86 Debug\dm.res
+         Debug\dm.obj
+         Debug\stdafx.obj
+         dm.vcxproj -> D:\github\Hook\Ma nguon chuong trinh\dm\Debug\dm.exe
+     1>Done Building Project "D:\github\Hook\Ma nguon chuong trinh\dm\dm\dm.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.33
