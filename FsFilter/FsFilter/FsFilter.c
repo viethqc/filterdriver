@@ -182,12 +182,12 @@ FsFilterPreCreateOperation (
 			if (FileNameInfo->Name.MaximumLength < 260)
 			{
 				RtlCopyMemory(szFileName, FileNameInfo->Name.Buffer, FileNameInfo->Name.MaximumLength);
-				_wcsupr(szFileName);
+				_wcslwr(szFileName);
 
-				if (wcsstr(szFileName, L"A.TXT") != NULL)
+				if (wcsstr(szFileName, L"a.txt") != NULL)
 				{
 					DbgPrint("FsFilterPreCreateOperation: %wS\n", szFileName);
-					Data->IoStatus.Status = STATUS_INVALID_HANDLE;
+					Data->IoStatus.Status = STATUS_NOT_FOUND;
 					Data->IoStatus.Information = 0;
 					FltReleaseFileNameInformation(FileNameInfo);
 					return FLT_PREOP_COMPLETE;
@@ -244,6 +244,124 @@ _Flt_CompletionContext_Outptr_ PVOID *CompletionContext
 	return FLT_PREOP_SUCCESS_WITH_CALLBACK;
 }
 
+ULONG GetNextEntryOffset(IN PVOID pData, IN FILE_INFORMATION_CLASS fileInfo)
+{
+	ULONG result = 0;
+	if (pData == NULL)
+		return result;
+	switch (fileInfo)
+	{
+	case FileDirectoryInformation:
+		result = ((PFILE_DIRECTORY_INFORMATION)pData)->NextEntryOffset;
+		break;
+	case FileFullDirectoryInformation:
+		result = ((PFILE_FULL_DIR_INFORMATION)pData)->NextEntryOffset;
+		break;
+	case FileIdFullDirectoryInformation:
+		result = ((PFILE_ID_FULL_DIR_INFORMATION)pData)->NextEntryOffset;
+		break;
+	case FileBothDirectoryInformation:
+		result = ((PFILE_BOTH_DIR_INFORMATION)pData)->NextEntryOffset;
+		break;
+	case FileIdBothDirectoryInformation:
+		result = ((PFILE_ID_BOTH_DIR_INFORMATION)pData)->NextEntryOffset;
+		break;
+	case FileNamesInformation:
+		result = ((PFILE_NAMES_INFORMATION)pData)->NextEntryOffset;
+		break;
+	}
+	return result;
+}
+
+VOID SetNextEntryOffset(IN PVOID pData, IN FILE_INFORMATION_CLASS fileInfo, IN ULONG Offset)
+{
+	if (pData == NULL)
+		return;
+	switch (fileInfo)
+	{
+	case FileDirectoryInformation:
+		((PFILE_DIRECTORY_INFORMATION)pData)->NextEntryOffset = Offset;
+		break;
+	case FileFullDirectoryInformation:
+		((PFILE_FULL_DIR_INFORMATION)pData)->NextEntryOffset = Offset;
+		break;
+	case FileIdFullDirectoryInformation:
+		((PFILE_ID_FULL_DIR_INFORMATION)pData)->NextEntryOffset = Offset;
+		break;
+	case FileBothDirectoryInformation:
+		((PFILE_BOTH_DIR_INFORMATION)pData)->NextEntryOffset = Offset;
+		break;
+	case FileIdBothDirectoryInformation:
+		((PFILE_ID_BOTH_DIR_INFORMATION)pData)->NextEntryOffset = Offset;
+		break;
+	case FileNamesInformation:
+		((PFILE_NAMES_INFORMATION)pData)->NextEntryOffset = Offset;
+		break;
+	}
+}
+
+PWSTR  GetEntryFileName(IN PVOID pData, IN FILE_INFORMATION_CLASS fileInfo)
+{
+	PWSTR  result = NULL;
+
+	if (pData == NULL)
+		return result;
+
+	switch (fileInfo)
+	{
+	case FileDirectoryInformation:
+		result = ((PFILE_DIRECTORY_INFORMATION)pData)->FileName;
+		break;
+	case FileFullDirectoryInformation:
+		result = ((PFILE_FULL_DIR_INFORMATION)pData)->FileName;
+		break;
+	case FileIdFullDirectoryInformation:
+		result = ((PFILE_ID_FULL_DIR_INFORMATION)pData)->FileName;
+		break;
+	case FileBothDirectoryInformation:
+		result = ((PFILE_BOTH_DIR_INFORMATION)pData)->FileName;
+		break;
+	case FileIdBothDirectoryInformation:
+		result = ((PFILE_ID_BOTH_DIR_INFORMATION)pData)->FileName;
+		break;
+	case FileNamesInformation:
+		result = ((PFILE_NAMES_INFORMATION)pData)->FileName;
+		break;
+	}
+	return result;
+}
+
+ULONG GetEntryFileNameLength(IN PVOID pData, IN FILE_INFORMATION_CLASS fileInfo)
+{
+	ULONG result = 0;
+
+	if (pData == NULL)
+		return result;
+
+	switch (fileInfo)
+	{
+	case FileDirectoryInformation:
+		result = ((PFILE_DIRECTORY_INFORMATION)pData)->FileNameLength;
+		break;
+	case FileFullDirectoryInformation:
+		result = ((PFILE_FULL_DIR_INFORMATION)pData)->FileNameLength;
+		break;
+	case FileIdFullDirectoryInformation:
+		result = ((PFILE_ID_FULL_DIR_INFORMATION)pData)->FileNameLength;
+		break;
+	case FileBothDirectoryInformation:
+		result = ((PFILE_BOTH_DIR_INFORMATION)pData)->FileNameLength;
+		break;
+	case FileIdBothDirectoryInformation:
+		result = ((PFILE_ID_BOTH_DIR_INFORMATION)pData)->FileNameLength;
+		break;
+	case FileNamesInformation:
+		result = ((PFILE_NAMES_INFORMATION)pData)->FileNameLength;
+		break;
+	}
+	return result;
+}
+
 FLT_POSTOP_CALLBACK_STATUS
 FsFilterPostDirectoryControOperation(
 _Inout_ PFLT_CALLBACK_DATA Data,
@@ -252,145 +370,115 @@ _In_opt_ PVOID CompletionContext,
 _In_ FLT_POST_OPERATION_FLAGS Flags
 )
 {
-	PFLT_FILE_NAME_INFORMATION FileNameInfo;
-	NTSTATUS status;
+	FILE_INFORMATION_CLASS fileInfo;
 	WCHAR szFileName[512 + 1] = { 0 };
-	PFILE_BOTH_DIR_INFORMATION	stDirInfo;
-	PFILE_BOTH_DIR_INFORMATION	dir_info;
-	UNICODE_STRING	EntryName;
-	UNICODE_STRING uStrParent;
-	NTSTATUS rc;
-	PUNICODE_STRING puStr = NULL;
-	PVOID FileInformation = NULL;
-	UNICODE_STRING defaultName;
-	UNICODE_STRING uStr, uStr1;
-	PUNICODE_STRING nameToUse;
-	PFLT_FILE_NAME_INFORMATION nameInfo = NULL;
-	char * ptrParentDir = NULL;
-	PCHAR ptr = NULL;
-	char * buffer = NULL;
-	wchar_t wcFullPathName[1024];
-	int BytesReturned = 0;
-	int bytesreturned = 0;
-	int i = 0, iPos = 0;
-	int j = 0, iLeft = 0;
-	BOOLEAN bDone;
 
-	RtlInitUnicodeString(&uStr, L"b.txt");
+	NTSTATUS status = FLT_POSTOP_FINISHED_PROCESSING;
 
-	status = FltGetFileNameInformation(Data, FLT_FILE_NAME_NORMALIZED | FLT_FILE_NAME_QUERY_DEFAULT, &FileNameInfo);
-	if (NT_SUCCESS(status))
+	if (!NT_SUCCESS(Data->IoStatus.Status) ||
+		Data->Iopb->MinorFunction != IRP_MN_QUERY_DIRECTORY ||
+		Data->Iopb->Parameters.DirectoryControl.QueryDirectory.DirectoryBuffer == NULL ||
+		KeGetCurrentIrql() != PASSIVE_LEVEL
+		)
 	{
-		status = FltParseFileNameInformation(FileNameInfo);
+		return FLT_POSTOP_FINISHED_PROCESSING;
+	}
 
-		if (NT_SUCCESS(status))
+
+	fileInfo = Data->Iopb->Parameters.DirectoryControl.QueryDirectory.FileInformationClass;
+	if
+		(
+		fileInfo == FileDirectoryInformation ||
+		fileInfo == FileFullDirectoryInformation ||
+		fileInfo == FileIdFullDirectoryInformation ||
+		fileInfo == FileBothDirectoryInformation ||
+		fileInfo == FileIdBothDirectoryInformation ||
+		fileInfo == FileNamesInformation
+		)
+	{
+
+		DbgPrint("=============FsFilterPostDirectoryControOperation\n");
+		PVOID prevEntry = NULL;
+		PVOID curEntry = NULL;
+
+		ULONG BufferPosition = 0;
+		ULONG moveEntryOffset = 0;
+		ULONG curEntryNextEntryOffset = 0;
+
+		UNICODE_STRING curFileName;
+
+
+		//get current directory buffer
+		curEntry = Data->Iopb->Parameters.DirectoryControl.QueryDirectory.DirectoryBuffer;
+
+
+		for (;;)
 		{
-			if (FileNameInfo->Name.MaximumLength < 260)
+			//calculate NextEntryOffset
+			curEntryNextEntryOffset = GetNextEntryOffset(curEntry, fileInfo);
+
+			//get current file name
+			curFileName.Buffer = GetEntryFileName(curEntry, fileInfo);
+			if (curFileName.Buffer == NULL)
+				break;
+
+			//get current file name length
+			curFileName.Length = curFileName.MaximumLength = (USHORT)GetEntryFileNameLength(curEntry, fileInfo);
+
+			RtlCopyMemory(szFileName, curFileName.Buffer, curFileName.MaximumLength);
+			_wcslwr(szFileName);
+
+			DbgPrint("FileName: %wS\n", szFileName);
+			if (wcsstr(szFileName, L"b.txt") != NULL)
 			{
-				RtlCopyMemory(szFileName, FileNameInfo->Name.Buffer, FileNameInfo->Name.MaximumLength);
-				_wcsupr(szFileName);
 
-				if (wcsstr(szFileName, L"DM") == NULL)
+				//if file not in the end of the buffer list
+				if (curEntryNextEntryOffset > 0)
 				{
-					FltReleaseFileNameInformation(FileNameInfo);
-					return FLT_POSTOP_FINISHED_PROCESSING;
-				}
+					BufferPosition = ((ULONG)curEntry) - (ULONG)Data->Iopb->Parameters.DirectoryControl.QueryDirectory.DirectoryBuffer;
 
+					//moved entry
+					moveEntryOffset = (ULONG)Data->Iopb->Parameters.DirectoryControl.QueryDirectory.Length - BufferPosition - curEntryNextEntryOffset;
 
-				DbgPrint("===========================FsFilterPostDirectoryControOperation: %wS===============\n", szFileName);
-				stDirInfo = (PFILE_BOTH_DIR_INFORMATION)Data->Iopb->Parameters.DirectoryControl.QueryDirectory.DirectoryBuffer;
-				ProbeForRead(&stDirInfo->FileName[0], sizeof(WCHAR), 1);
-				DbgPrint("FileName : %ws\n", &stDirInfo->FileName[0]);
+					//move memory
+					RtlMoveMemory(curEntry, (PVOID)((PCHAR)curEntry + curEntryNextEntryOffset), (ULONG)moveEntryOffset);
 
-				do
-				{
-					stDirInfo = (PFILE_BOTH_DIR_INFORMATION)(((PUCHAR)stDirInfo) + stDirInfo->NextEntryOffset);
-					ProbeForRead(&stDirInfo->FileName[0], sizeof(WCHAR), 1);
-					DbgPrint("FileName : %ws\n", &stDirInfo->FileName[0]);
-
-					stDirInfo->NextEntryOffset = 0;
-				} while (stDirInfo->NextEntryOffset != 0);
-
-				/*if (stDirInfo->NextEntryOffset == 0) {
-					DbgPrint("NextEntryOffset = 0");
+					continue;
 				}
 				else
 				{
-					DbgPrint("Next offset is not zero\n");
-					stDirInfo = (PFILE_BOTH_DIR_INFORMATION)(((PUCHAR)stDirInfo) + stDirInfo->NextEntryOffset);
-					ProbeForRead(&stDirInfo->FileName[0], sizeof(WCHAR), 1);
-					DbgPrint("2 : %ws\n", &stDirInfo->FileName[0]);
 
-					if (stDirInfo->NextEntryOffset == 0) {
-						DbgPrint("NextEntryOffset = 0");
+					//if single file in directory
+					if (prevEntry == NULL)
+					{
+						Data->IoStatus.Status = STATUS_NO_MORE_FILES;
+						status = FLT_POSTOP_FINISHED_PROCESSING;
 					}
 					else
 					{
-						DbgPrint("Next offset is not zero\n");
-						stDirInfo = (PFILE_BOTH_DIR_INFORMATION)(((PUCHAR)stDirInfo) + stDirInfo->NextEntryOffset);
-						ProbeForRead(&stDirInfo->FileName[0], sizeof(WCHAR), 1);
-						DbgPrint("3 : %ws\n", &stDirInfo->FileName[0]);
+						//if last file in the list set NextEntryOffset = 0
+						SetNextEntryOffset(prevEntry, fileInfo, 0);
 					}
-				}*/
-
-				//bytesreturned = 0;
-
-				//while (1) {
-
-				//	ProbeForRead(&stDirInfo->FileName[0], sizeof(WCHAR), 1);
-
-				//	DbgPrint("File Name : %ws\n", &stDirInfo->FileName[0]);
-				//	uStr1.Length = (USHORT)stDirInfo->FileNameLength;
-				//	uStr1.MaximumLength = uStr1.Length;
-				//	uStr1.Buffer = &stDirInfo->FileName[0];
-
-				//	//RtlInitUnicodeString(&uStr1,&stDirInfo->FileName[0]);
-
-				//	/*if (RtlCompareUnicodeString(&uStr1, &uStr, TRUE) == 0)
-				//	{
-				//		DbgPrint("File Compared");
-				//		if (stDirInfo->NextEntryOffset == 0)
-				//			break;
-
-				//		stDirInfo = (PFILE_BOTH_DIR_INFORMATION)(((PUCHAR)stDirInfo) + stDirInfo->NextEntryOffset);
-				//		continue;
-				//	}*/
-
-				//	if (stDirInfo->NextEntryOffset != 0) {
-
-				//		bytesreturned += stDirInfo->NextEntryOffset;
-				//		DbgPrint("BytesRetured = %d, Offset Not Zero = %d\ n ", bytesreturned, stDirInfo->NextEntryOffset);
-				//	}
-				//	else {
-				//		bytesreturned += sizeof(*stDirInfo) - sizeof(WCHAR)+stDirInfo->FileNameLength;
-				//		DbgPrint("BytesRetured = %d, Offset = %d\ n ", bytesreturned, stDirInfo->NextEntryOffset);
-				//	}
-				//	//ptr+=stDirInfo->NextEntryOffset;
-				//	//DbgPrint("ptr = %d\n",(ULONG)buffer);
-
-				//	if (stDirInfo->NextEntryOffset == 0) {
-				//		DbgPrint("Quit from inner loop");
-				//		break;
-				//	}
-
-				//	stDirInfo = (PFILE_BOTH_DIR_INFORMATION)(((PUCHAR)stDirInfo) + stDirInfo->NextEntryOffset);
-				//	DbgPrint("Next offset is not zero\n");
-
-				//} // while end
-
-				//if (bytesreturned > 0) {
-				//	DbgPrint("BytesRetured > = %d\n", bytesreturned);
-				//}
-				//Data->IoStatus.Information = bytesreturned;
-
-				//RtlCopyMemory((PVOID)Data->Iopb - > Parameters.DirectoryControl.QueryDirectory.DirectoryBuffer, (PVOID)stDirInfo, bytesreturned);
+					break;
+				}
 			}
+
+			//DbgPrint("FileName: %wS\n", curFileName.Buffer);
+
+			//end of directory buffer
+			if (GetNextEntryOffset(curEntry, fileInfo) == 0)
+			{
+				break;
+			}
+
+			prevEntry = curEntry;
+
+			//next file in buffer
+			curEntry = (PVOID)((PCHAR)curEntry + GetNextEntryOffset(curEntry, fileInfo));
 		}
 
-		FltReleaseFileNameInformation(FileNameInfo);
 	}
-
-	return FLT_POSTOP_FINISHED_PROCESSING;
+	return status;
 }
 
 

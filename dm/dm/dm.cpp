@@ -32,17 +32,17 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 		}
 		else
 		{
-			// TODO: code your application's behavior here.
-			//if (PathFileExists(L"C:\\a.txt") == FALSE)
-			//{
-			//	_tprintf(_T("File not found\n"));
-			//}
+			 //TODO: code your application's behavior here.
+			if (PathFileExists(L"C:\\a.txt") == FALSE)
+			{
+				_tprintf(_T("File not found\n"));
+			}
 
-			//DWORD ftyp = GetFileAttributes(L"C:\\a.txt");
-			//if (ftyp == INVALID_FILE_ATTRIBUTES)
-			//{
-			//	_tprintf(_T("Get file attribute error\n"));
-			//}
+			DWORD ftyp = GetFileAttributes(L"C:\\a.txt");
+			if (ftyp == INVALID_FILE_ATTRIBUTES)
+			{
+				_tprintf(_T("Get file attribute error\n"));
+			}
 
 			HANDLE hFind = INVALID_HANDLE_VALUE;
 			WIN32_FIND_DATA find_data;

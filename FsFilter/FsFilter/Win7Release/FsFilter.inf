@@ -10,7 +10,7 @@ Signature   = "$Windows NT$"
 Class = "_TODO_Change_Class_appropriately_"
 ClassGuid = {_TODO_Change_ClassGuid_appropriately_}
 Provider    = %ManufacturerName%
-DriverVer=12/21/2018,1.7.23.515
+DriverVer=12/25/2018,23.46.54.354
 CatalogFile = FsFilter.cat
 
 [DestinationDirs]
